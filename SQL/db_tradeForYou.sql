@@ -158,18 +158,20 @@ END
 //
 DELIMITER ;
 
+/* Cognome, Nome, DataN, Username, Mail, Pass */
+CALL newOperatore('Enrico', 'Ferraiolo', '2002-09-29', 'opEnrico', 'enrico.ferraiolo@gmail.com', 'pwEnrico');
+CALL newOperatore('Bergantin', 'Andrea', '2001-03-15', 'opAndrea', 'andrea.bergantin@gmail.com', 'pwAndrea');
 
-CALL newOperatore('opRossi', 'Rossi', 'Mario', '1990-03-20', 'rossi.mario@gmail.com', 'pwRossi');
-CALL newOperatore('opBianchi', 'Bianchi', 'Marco', '1980-06-18', 'bianchi.marco@gmail.com', 'pwBianchi');
+/* Cognome, Nome, DataN, Username, Mail, Pass */
+CALL newCliente('Sana', 'Hamza', '2000-05-12', 'Sana01', 'sanahamzaali@gmail.com', 'pwSana');
+CALL newCliente('Cantoni', 'Gioele', '2002-09-13', 'Cantoni01', 'sanahamzaali1@gmail.com', 'pwSana');
 
-CALL newCliente('userHu', 'Hu', 'Matteo', '2002-07-29', 'hu.matteo@gmail.com', 'pwHu');
-CALL newCliente('userVerdi', 'Verdi', 'Giovanni', '2002-06-03', 'verdi.giovanni@gmail.com', 'pwVerdi');
 
-CALL newOperazione('2021-05-11', '12:00:00', 900.00, 'Descrizione operazione 1', 1, 1);
-CALL newOperazione('2021-05-12', '12:30:00', 800.00, 'Descrizione operazione 2', 2, 1);
-CALL newOperazione('2021-05-13', '13:00:00', 700.00, 'Descrizione operazione 3', 1, 1);
-CALL newOperazione('2021-05-14', '13:30:00', 600.00, 'Descrizione operazione 4', 2, 1);
-CALL newOperazione('2021-05-15', '14:00:00', 500.00, 'Descrizione operazione 5', 1, 1);
-CALL newOperazione('2021-05-16', '14:30:00', 400.00, 'Descrizione operazione 6', 1, 1);
-CALL newOperazione('2021-05-17', '15:00:00', 300.00, 'Descrizione operazione 7', 1, 2);
-CALL newOperazione('2021-05-18', '15:30:00', 200.00, 'Descrizione operazione 8', 2, 2);
+
+/*Data, Ora, Importo, Descrizione, fk_idOperatore, fk_idCliente*/
+CALL newOperazione('2021-05-23', '15:13:46', 532.00, 'Prima operazione', 1, 1);
+CALL newOperazione('2021-05-24', '09:49:23', 845.00, 'Seconda operazione', 2, 1);
+CALL newOperazione('2021-05-25', '11:45:58', 200.00, 'Terza operazione', 1, 2);
+CALL newOperazione('2021-05-26', '14:01:16', 725.00, 'Quarta operazione', 2, 2);
+CALL newOperazione('2021-05-27', '12:44:37', 623.00, 'Quinta operazione', 1, 1);
+CALL newOperazione('2021-05-27', '16:59:42', 150.00, 'Sesta operazione', 1, 2);
