@@ -12,7 +12,7 @@ CREATE TABLE operatori
     nome          VARCHAR(50) NOT NULL,
     dataNascita   DATE        NOT NULL,
     username      VARCHAR(20) NOT NULL UNIQUE,
-    email         VARCHAR(50) NOT NULL UNIQUE,
+    email         VARCHAR(70) NOT NULL UNIQUE,
     salt          VARCHAR(32) NOT NULL,
     password_hash VARCHAR(64) NOT NULL,
     CHECK (dataNascita < CURRENT_DATE)
@@ -27,7 +27,7 @@ CREATE TABLE clienti
     nome          VARCHAR(50) NOT NULL,
     dataNascita   DATE        NOT NULL,
     username      VARCHAR(20) NOT NULL UNIQUE,
-    email         VARCHAR(50) NOT NULL UNIQUE,
+    email         VARCHAR(70) NOT NULL UNIQUE,
     salt          VARCHAR(32) NOT NULL,
     password_hash VARCHAR(64) NOT NULL,
     CHECK (dataNascita < CURRENT_DATE)
@@ -38,8 +38,8 @@ CREATE TABLE campagne
 (
     idCampagna   INT           NOT NULL PRIMARY KEY AUTO_INCREMENT,
     nome         VARCHAR(50)   NOT NULL UNIQUE,
-    descrizione  VARCHAR(50)   NOT NULL,
     dataScadenza DATE          NOT NULL,
+    descrizione  VARCHAR(100)   NOT NULL,
     budget       DECIMAL(6, 2) NOT NULL,
     CHECK (budget > 0)
 );
@@ -51,7 +51,7 @@ CREATE TABLE operazioni
     data           DATE          NOT NULL,
     ora            TIME          NOT NULL,
     importo        DECIMAL(6, 2) NOT NULL,
-    descrizione    VARCHAR(50)   NOT NULL,
+    descrizione    VARCHAR(100)   NOT NULL,
     fk_idOperatore INT           NOT NULL,
     fk_idCliente   INT           NOT NULL,
     FOREIGN KEY (fk_idOperatore) REFERENCES operatori (idOperatore),
@@ -137,8 +137,8 @@ CREATE PROCEDURE newCampagna(param_nome VARCHAR (50),
                              param_budget DECIMAL (7, 2))
     DETERMINISTIC
 BEGIN
-INSERT INTO campagne(nome, descrizione, dataScadenza, budget)
-VALUES (param_nome, param_descrizione, param_dataScadenza, param_budget);
+INSERT INTO campagne(nome, dataScadenza, descrizione, budget)
+VALUES (param_nome, param_dataScadenza, param_descrizione, param_budget);
 END
 //
 DELIMITER ;
