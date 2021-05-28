@@ -115,7 +115,7 @@ DELIMITER
 //
 CREATE PROCEDURE newOperazione(param_data DATE,
                                param_ora TIME,
-                               param_importo DECIMAL (7,2),
+                               param_importo DECIMAL (6,2),
                                param_descrizione VARCHAR (50),
                                param_fk_idOperatore INT,
                                param_fk_idCliente INT)
@@ -134,7 +134,7 @@ DELIMITER
 CREATE PROCEDURE newCampagna(param_nome VARCHAR (50),
                              param_descrizione VARCHAR (50),
                              param_dataScadenza DATE,
-                             param_budget DECIMAL (7, 2))
+                             param_budget DECIMAL (6, 2))
     DETERMINISTIC
 BEGIN
 INSERT INTO campagne(nome, dataScadenza, descrizione, budget)
