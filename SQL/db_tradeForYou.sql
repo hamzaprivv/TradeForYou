@@ -1,17 +1,17 @@
-CREATE DATABASE IF NOT EXISTS db_TradeForYou;
+CREATE DATABASE IF NOT EXISTS db_tradeForYou;
 
 USE
-db_TradeForYou;
+db_tradeForYou;
 
 
 DROP TABLE IF EXISTS operatori;
 CREATE TABLE operatori
 (
     idOperatore   INT         NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    username      VARCHAR(20) NOT NULL UNIQUE,
     cognome       VARCHAR(50) NOT NULL,
     nome          VARCHAR(50) NOT NULL,
     dataNascita   DATE        NOT NULL,
+    username      VARCHAR(20) NOT NULL UNIQUE,
     email         VARCHAR(50) NOT NULL UNIQUE,
     salt          VARCHAR(32) NOT NULL,
     password_hash VARCHAR(64) NOT NULL,
@@ -23,32 +23,15 @@ DROP TABLE IF EXISTS clienti;
 CREATE TABLE clienti
 (
     idCliente     INT         NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    username      VARCHAR(20) NOT NULL UNIQUE,
     cognome       VARCHAR(50) NOT NULL,
     nome          VARCHAR(50) NOT NULL,
     dataNascita   DATE        NOT NULL,
+    username      VARCHAR(20) NOT NULL UNIQUE,
     email         VARCHAR(50) NOT NULL UNIQUE,
     salt          VARCHAR(32) NOT NULL,
     password_hash VARCHAR(64) NOT NULL,
     CHECK (dataNascita < CURRENT_DATE)
 );
-
-
-DROP TABLE IF EXISTS operazioni;
-CREATE TABLE operazioni
-(
-    idOperazione   INT           NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    data           DATE          NOT NULL,
-    ora            TIME          NOT NULL,
-    importo        DECIMAL(7, 2) NOT NULL,
-    descrizione    VARCHAR(50)   NOT NULL,
-    fk_idOperatore INT           NOT NULL,
-    fk_idCliente   INT           NOT NULL,
-    FOREIGN KEY (fk_idOperatore) REFERENCES operatori (idOperatore) ON UPDATE CASCADE ON DELETE RESTRICT,
-    FOREIGN KEY (fk_idCliente) REFERENCES clienti (idCliente) ON UPDATE CASCADE ON DELETE RESTRICT,
-    CHECK (importo > 0)
-);
-
 
 DROP TABLE IF EXISTS campagne;
 CREATE TABLE campagne
@@ -57,10 +40,24 @@ CREATE TABLE campagne
     nome         VARCHAR(50)   NOT NULL UNIQUE,
     descrizione  VARCHAR(50)   NOT NULL,
     dataScadenza DATE          NOT NULL,
-    budget       DECIMAL(7, 2) NOT NULL,
+    budget       DECIMAL(6, 2) NOT NULL,
     CHECK (budget > 0)
 );
 
+DROP TABLE IF EXISTS operazioni;
+CREATE TABLE operazioni
+(
+    idOperazione   INT           NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    data           DATE          NOT NULL,
+    ora            TIME          NOT NULL,
+    importo        DECIMAL(6, 2) NOT NULL,
+    descrizione    VARCHAR(50)   NOT NULL,
+    fk_idOperatore INT           NOT NULL,
+    fk_idCliente   INT           NOT NULL,
+    FOREIGN KEY (fk_idOperatore) REFERENCES operatori (idOperatore),
+    FOREIGN KEY (fk_idCliente) REFERENCES clienti (idCliente),
+    CHECK (importo > 0)
+);
 
 DROP TABLE IF EXISTS invia;
 CREATE TABLE invia
@@ -68,51 +65,51 @@ CREATE TABLE invia
     idInvia       INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     fk_idCampagna INT NOT NULL,
     fk_idCliente  INT NOT NULL,
-    FOREIGN KEY (fk_idCampagna) REFERENCES campagne (idCampagna) ON UPDATE CASCADE ON DELETE RESTRICT,
-    FOREIGN KEY (fk_idCliente) REFERENCES clienti (idCliente) ON UPDATE CASCADE ON DELETE RESTRICT
+    FOREIGN KEY (fk_idCampagna) REFERENCES campagne (idCampagna),
+    FOREIGN KEY (fk_idCliente) REFERENCES clienti (idCliente)
 );
 
-
+/*-----------------------------------------------NEW OPERATOR-------------------------------------------------------------------------------*/
 DROP PROCEDURE IF EXISTS newOperatore;
 DELIMITER
 //
-CREATE PROCEDURE newOperatore(param_username VARCHAR (20),
-                              param_cognome VARCHAR (50),
+CREATE PROCEDURE newOperatore(param_cognome VARCHAR (50),
                               param_nome VARCHAR (50),
                               param_dataNascita DATE,
+                              param_username VARCHAR (20),
                               param_email VARCHAR (50),
                               param_password VARCHAR (20))
     DETERMINISTIC
 BEGIN
  SET @s = MD5(RAND());
  SET @h = SHA2(CONCAT(@s, param_password), 256);
-INSERT INTO operatori(username, cognome, nome, dataNascita, email, salt, password_hash)
-VALUES (param_username, param_cognome, param_nome, param_dataNascita, param_email, @s, @h);
+INSERT INTO operatori(cognome, nome, dataNascita, username, email, salt, password_hash)
+VALUES (param_cognome, param_nome, param_dataNascita, param_username, param_email, @s, @h);
 END
 //
 DELIMITER ;
 
-
+/*-----------------------------------------------NEW CLIENT-------------------------------------------------------------------------------*/
 DROP PROCEDURE IF EXISTS newCliente;
 DELIMITER
 //
-CREATE PROCEDURE newCliente(param_username VARCHAR (20),
-                            param_cognome VARCHAR (50),
+CREATE PROCEDURE newCliente(param_cognome VARCHAR (50),
                             param_nome VARCHAR (50),
                             param_dataNascita DATE,
+                            param_username VARCHAR (20),
                             param_email VARCHAR (50),
                             param_password VARCHAR (20))
     DETERMINISTIC
 BEGIN
  SET @s = MD5(RAND());
  SET @h = SHA2(CONCAT(@s, param_password), 256);
-INSERT INTO clienti(username, cognome, nome, dataNascita, email, salt, password_hash)
-VALUES (param_username, param_cognome, param_nome, param_dataNascita, param_email, @s, @h);
+INSERT INTO clienti(cognome, nome, dataNascita, username, email, salt, password_hash)
+VALUES (param_cognome, param_nome, param_dataNascita, param_username, param_email, @s, @h);
 END
 //
 DELIMITER ;
 
-
+/*-----------------------------------------------NEW OPERATION-------------------------------------------------------------------------------*/
 DROP PROCEDURE IF EXISTS newOperazione;
 DELIMITER
 //
@@ -130,7 +127,7 @@ END
 //
 DELIMITER ;
 
-
+/*-----------------------------------------------NEW CAMPAIGN-------------------------------------------------------------------------------*/
 DROP PROCEDURE IF EXISTS newCampagna;
 DELIMITER
 //
@@ -147,6 +144,7 @@ END
 DELIMITER ;
 
 
+/*-----------------------------------------------NEW INVIA-------------------------------------------------------------------------------*/
 DROP PROCEDURE IF EXISTS newInvia;
 DELIMITER
 //
